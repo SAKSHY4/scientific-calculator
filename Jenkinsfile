@@ -15,21 +15,30 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    sh 'pip install -r requirements.txt || echo "No requirements file found, skipping..."'
+                    sh '''
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip install --upgrade pip
+                        pip install -r requirements.txt
+                    '''
                 }
             }
         }
         stage('Run Tests') {
             steps {
                 script {
-                    sh 'pytest test_calculator.py'  // Running the test script
+                    // Activate the same virtual environment for tests
+                    sh '''
+                        . venv/bin/activate
+                        pytest test_calculator.py
+                    '''
                 }
             }
         }
         stage('Build Docker Image') {
             steps {
                 script {
-                    sudo docker.build("${DOCKER_IMAGE_NAME}", '.')
+                    docker.build("${DOCKER_IMAGE_NAME}", '.')
                 }
             }
         }
