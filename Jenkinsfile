@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE_NAME = 'scientific-calculator'
-        GITHUB_REPO_URL = 'https://github.com/SAKSHY4/scientific-calculator'
+        GITHUB_REPO_URL = 'https://github.com/SAKSHY4/scientific-calculator.git'
     }
     stages {
         stage('Checkout') {
@@ -12,10 +12,17 @@ pipeline {
                 }
             }
         }
-        stage('Build and Test') {
+        stage('Install Dependencies') {
             steps {
                 script {
-                    sh 'mvn clean install'
+                    sh 'pip install -r requirements.txt || echo "No requirements file found, skipping..."'
+                }
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                script {
+                    sh 'pytest test_calculator.py'  // Running the test script
                 }
             }
         }
