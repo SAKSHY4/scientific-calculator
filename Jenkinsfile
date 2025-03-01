@@ -27,7 +27,6 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // Activate the same virtual environment for tests
                     sh '''
                         . venv/bin/activate
                         pytest test_calculator.py
@@ -61,21 +60,6 @@ pipeline {
                     )
                 }
             }
-        }
-    }
-}
-stage('Install Dependencies') {
-    steps {
-        script {
-            sh '''
-                # Create a virtual environment in the "venv" directory
-                python3 -m venv venv
-
-                # Activate the virtual environment and install dependencies
-                . venv/bin/activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
-            '''
         }
     }
 }
