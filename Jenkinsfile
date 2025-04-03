@@ -45,8 +45,13 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('', 'DockerHubCred') {
-                        sh "docker tag ${DOCKER_IMAGE_NAME} sakshya4/scientific-calculator:0.0.1"
-                        sh "docker push sakshya4/scientific-calculator"
+                        // Tagging the image correctly
+                        sh "docker tag ${DOCKER_IMAGE_NAME}:latest sakshya4/scientific-calculator:latest"
+                        sh "docker tag ${DOCKER_IMAGE_NAME}:latest sakshya4/scientific-calculator:0.0.1"
+                        
+                        // Pushing both tags
+                        sh "docker push sakshya4/scientific-calculator:latest"
+                        sh "docker push sakshya4/scientific-calculator:0.0.1"
                     }
                 }
             }
